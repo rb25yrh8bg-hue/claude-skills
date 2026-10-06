@@ -1,0 +1,1 @@
+../../../.claude/skills/social-carousel/SKILL.md

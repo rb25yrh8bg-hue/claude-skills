@@ -1,0 +1,1 @@
+../../../.claude/skills/banner-design/SKILL.md

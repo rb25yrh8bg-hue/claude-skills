@@ -1,0 +1,1 @@
+../../../.claude/skills/chat-motion-overlay/SKILL.md

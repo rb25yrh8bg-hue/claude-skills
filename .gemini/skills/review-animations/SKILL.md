@@ -1,0 +1,1 @@
+../../../.claude/skills/review-animations/SKILL.md

@@ -1,0 +1,407 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>gosourcein reel</title>
+<style>
+:root{
+  --bg:#06080D; --panel:#0D121C; --ink:#F3F5F9; --mute:#8B93A7; --line:rgba(255,255,255,.10);
+  --lime:#C8FF3D; --blue:#5B7CFF; --coral:#FF5B4F;
+  --sans:'Inter Display','Inter',sans-serif; --mono:'DejaVu Sans Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;width:1080px;height:1920px;overflow:hidden}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.abs{position:absolute}
+.mono{font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase}
+/* background */
+#grid{inset:0;background-image:radial-gradient(rgba(255,255,255,.08) 1.6px,transparent 1.8px);background-size:54px 54px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 45%,#000 30%,transparent 80%)}
+.glow{width:1300px;height:1300px;border-radius:50%}
+#g1{left:-420px;top:-300px;background:radial-gradient(circle,rgba(91,124,255,.40),transparent 62%)}
+#g2{left:300px;top:1000px;background:radial-gradient(circle,rgba(200,255,61,.16),transparent 62%)}
+#grain{inset:0;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.shape{will-change:transform}
+/* brand chip */
+#brand{left:80px;top:150px;display:flex;align-items:center;gap:14px;font-weight:700;font-size:36px;letter-spacing:-.02em;z-index:5}
+#brand i{width:20px;height:20px;border-radius:50%;background:var(--lime);box-shadow:0 0 24px var(--lime)}
+#brand b{font-weight:500;color:var(--mute);font-size:26px;margin-left:8px}
+/* scenes */
+.scene{position:absolute;inset:0;visibility:hidden;z-index:3}
+.chip{display:inline-flex;align-items:center;gap:14px;padding:14px 24px;border:1.5px solid var(--line);border-radius:999px;font-size:26px;color:var(--lime);background:rgba(255,255,255,.03)}
+.chip::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--lime)}
+h1,h2{font-weight:800;letter-spacing:-.045em;line-height:.95}
+.panel{background:var(--panel);border:1.5px solid var(--line);border-radius:28px}
+/* s1 */
+#s1 .kicker{left:80px;top:330px}
+#hook{left:80px;top:420px;font-size:150px}
+.lie{color:var(--coral)}
+#u1{height:14px;background:var(--coral);border-radius:7px;transform-origin:left center}
+#qcard{left:80px;top:1000px;width:640px;padding:36px 40px}
+#qcard .h{font-size:24px;color:var(--mute);display:flex;justify-content:space-between}
+#qcard .v{font-size:150px;font-weight:800;letter-spacing:-.05em;margin-top:14px;font-variant-numeric:tabular-nums}
+#qcard .v small{font-size:44px;color:var(--mute);font-weight:600;letter-spacing:-.01em}
+#qcard .f{font-size:24px;color:var(--mute);margin-top:6px}
+#stamp{left:640px;top:1040px;padding:18px 26px;border:5px solid var(--coral);color:var(--coral);border-radius:16px;font-size:40px;font-weight:800;transform:rotate(-12deg)}
+/* s2 */
+#s2 .chip{position:absolute;left:80px;top:300px}
+#h2a{left:80px;top:390px;font-size:84px}
+#plabel{left:80px;top:620px;font-size:26px;color:var(--mute)}
+#price{left:72px;top:650px;font-size:230px;font-weight:800;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+#price span.c{font-size:120px;vertical-align:top;line-height:1.6;color:var(--mute)}
+#badge{left:760px;top:640px;width:240px;height:240px;border-radius:50%;background:var(--coral);color:#140504;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800}
+#badge b{font-size:78px;letter-spacing:-.05em;line-height:1}
+#badge span{font-size:22px;margin-top:6px}
+.cost{left:80px;width:920px;height:84px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;font-size:40px;font-weight:600}
+.cost em{font-style:normal;font-family:var(--mono);color:var(--coral);font-size:36px}
+#foot2{left:80px;top:1440px;font-size:22px;color:var(--mute)}
+/* s3 */
+#s3{background:var(--lime);color:#0A0D05;clip-path:circle(0% at 50% 50%);z-index:6}
+#word{left:0;width:1080px;top:600px;text-align:center;font-size:176px;font-weight:800;letter-spacing:-.06em}
+#tag3{left:0;width:1080px;top:860px;text-align:center;font-size:92px}
+#s3 .mono{left:0;width:1080px;text-align:center;top:1180px;font-size:28px}
+/* s4 */
+.sc .chip{position:absolute;left:80px;top:300px}
+#h4{left:80px;top:390px;font-size:120px}
+#fac{left:80px;top:650px;font-size:24px;color:var(--mute)}
+.row{left:80px;width:920px;height:132px;display:flex;align-items:center;padding:0 30px;gap:26px}
+.row .rk{width:64px;height:64px;border-radius:18px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:26px;color:var(--mute)}
+.row .nm{flex:1}
+.row .nm b{display:block;font-size:36px;font-weight:700;letter-spacing:-.02em}
+.row .nm span{font-family:var(--mono);font-size:20px;color:var(--mute);text-transform:uppercase}
+.row .bars{display:flex;gap:8px;align-items:flex-end;height:56px}
+.row .bars i{width:14px;border-radius:4px;background:rgba(255,255,255,.22);transform-origin:bottom}
+.row .s{width:110px;text-align:right;font-size:58px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.row.win{border-color:var(--lime)}
+#best{left:700px;padding:10px 18px;border-radius:999px;background:var(--lime);color:#0A0D05;font-size:22px;font-weight:800}
+/* s5 */
+#h5{left:80px;top:390px;font-size:110px}
+#box{left:290px;top:820px;width:500px;height:520px}
+.bid{width:190px;height:116px;border-radius:20px;padding:18px 22px;font-family:var(--mono)}
+.bid small{display:block;font-size:18px;color:var(--mute)}
+.bid b{font-size:34px;letter-spacing:.06em;filter:blur(5px)}
+#pill5{left:0;width:1080px;top:1380px;display:flex;justify-content:center}
+#pill5 div{padding:20px 34px;border-radius:999px;border:1.5px solid var(--lime);color:var(--lime);font-size:30px;font-weight:700;background:rgba(200,255,61,.06)}
+/* s6 */
+#h6{left:80px;top:390px;font-size:120px}
+#map{left:80px;top:650px;width:920px;height:560px}
+.ck{width:450px;height:92px;display:flex;align-items:center;gap:20px;padding:0 26px;font-size:36px;font-weight:700}
+.ck i{width:44px;height:44px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center}
+.ck span{margin-left:auto;font-family:var(--mono);font-size:18px;color:var(--mute);text-transform:uppercase}
+/* s7 */
+#not{left:80px;top:330px;font-size:64px;font-weight:700;color:var(--mute);letter-spacing:-.03em}
+#strike{left:76px;top:368px;height:8px;width:560px;background:var(--coral);border-radius:4px;transform-origin:left}
+#h7{left:80px;top:440px;font-size:128px}
+#h7 .l{color:var(--lime)}
+#cta{left:160px;top:1000px;width:760px;height:150px;border-radius:999px;background:var(--lime);color:#0A0D05;display:flex;align-items:center;justify-content:center;gap:22px;font-size:58px;font-weight:800;letter-spacing:-.03em;overflow:hidden;box-shadow:0 30px 90px rgba(200,255,61,.28)}
+#shine{left:-200px;top:-40px;width:120px;height:240px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:rotate(18deg)}
+.pr{left:540px;top:1075px;width:760px;height:150px;margin:-75px 0 0 -380px;border-radius:999px;border:3px solid var(--lime);opacity:0}
+#url{left:0;width:1080px;top:1210px;text-align:center;font-family:var(--mono);font-size:62px;letter-spacing:.02em}
+#bio{left:0;width:1080px;top:1310px;text-align:center;font-size:40px;color:var(--mute);font-weight:600}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="g1" class="abs glow"></div><div id="g2" class="abs glow"></div>
+  <div id="grid" class="abs"></div>
+
+  <!-- floating geometry -->
+  <svg id="shapes" class="abs" width="1080" height="1920" style="left:0;top:0;z-index:1">
+    <g class="shape" id="sh1" transform="translate(900 300)"><circle r="70" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="3"/></g>
+    <g class="shape" id="sh2" transform="translate(160 1600)"><path d="M-26 0H26M0-26V26" stroke="#C8FF3D" stroke-width="5" stroke-linecap="round"/></g>
+    <g class="shape" id="sh3" transform="translate(960 1500)"><rect x="-40" y="-40" width="80" height="80" rx="10" fill="none" stroke="rgba(91,124,255,.6)" stroke-width="3"/></g>
+    <g class="shape" id="sh4" transform="translate(120 260)"><path d="M0-40L36 24H-36Z" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/></g>
+    <g class="shape" id="sh5" transform="translate(1000 900)"><circle r="9" fill="#5B7CFF"/></g>
+    <g class="shape" id="sh6" transform="translate(70 980)"><circle r="160" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="2" stroke-dasharray="6 14"/></g>
+    <g class="shape" id="sh7" transform="translate(620 1700)"><path d="M-20 0H20M0-20V20" stroke="rgba(255,255,255,.25)" stroke-width="4" stroke-linecap="round"/></g>
+  </svg>
+
+  <div id="brand" class="abs"><i></i>gosourcein<b>.com</b></div>
+
+  <!-- S1 HOOK -->
+  <section id="s1" class="scene">
+    <div class="abs chip mono kicker">Sourcing reality check</div>
+    <h1 id="hook" class="abs">Your supplier<br>quote is<br><span class="lie">lying</span> to you.</h1>
+    <div id="u1" class="abs"></div>
+    <div id="qcard" class="abs panel">
+      <div class="h mono"><span>Quote #A-2291</span><span>FOB</span></div>
+      <div class="v">$4.20<small> / unit</small></div>
+      <div class="f mono">Shenzhen · MOQ 5,000</div>
+    </div>
+    <div id="stamp" class="abs">TOO GOOD?</div>
+  </section>
+
+  <!-- S2 HIDDEN COSTS -->
+  <section id="s2" class="scene">
+    <div class="chip mono">The hidden math</div>
+    <h2 id="h2a" class="abs">The real cost shows up<br>at the border.</h2>
+    <div id="plabel" class="abs mono">Landed cost / unit</div>
+    <div id="price" class="abs"><span class="c">$</span><span id="pv">4.20</span></div>
+    <div id="badge" class="abs"><b>+63%</b><span class="mono">vs. quote</span></div>
+    <div class="abs panel cost" style="top:930px"><span>+ Freight</span><em>+$0.68</em></div>
+    <div class="abs panel cost" style="top:1032px"><span>+ Customs duty</span><em>+$0.73</em></div>
+    <div class="abs panel cost" style="top:1134px"><span>+ VAT</span><em>+$0.66</em></div>
+    <div class="abs panel cost" style="top:1236px"><span>+ Insurance</span><em>+$0.26</em></div>
+    <div class="abs panel cost" style="top:1338px"><span>+ Port &amp; handling</span><em>+$0.32</em></div>
+    <div id="foot2" class="abs mono">* Illustrative example</div>
+  </section>
+
+  <!-- S3 BRAND REVEAL -->
+  <section id="s3" class="scene">
+    <svg class="abs" width="1080" height="1920" style="left:0;top:0">
+      <circle id="r3a" cx="540" cy="820" r="430" fill="none" stroke="rgba(10,13,5,.18)" stroke-width="3" stroke-dasharray="4 18"/>
+      <circle id="r3b" cx="540" cy="820" r="560" fill="none" stroke="rgba(10,13,5,.10)" stroke-width="2"/>
+      <circle id="o3" cx="540" cy="390" r="14" fill="#0A0D05"/>
+    </svg>
+    <div id="word" class="abs">gosourcein</div>
+    <h2 id="tag3" class="abs">Global sourcing,<br>rebuilt as software.</h2>
+    <div class="abs mono">Not a marketplace · Infrastructure</div>
+  </section>
+
+  <!-- S4 AI RANKING -->
+  <section id="s4" class="scene sc">
+    <div class="chip mono">01 — AI Ranking</div>
+    <h2 id="h4" class="abs"><span id="cnt">0K</span>+ listings.<br>One score.</h2>
+    <div id="fac" class="abs mono">Price · Lead time · Reliability · Total cost</div>
+    <div id="rows"></div>
+    <div id="best" class="abs mono">Best match</div>
+  </section>
+
+  <!-- S5 CLOSED-BOX RFQ -->
+  <section id="s5" class="scene sc">
+    <div class="chip mono">02 — Closed-box RFQ</div>
+    <h2 id="h5" class="abs">Suppliers bid blind.<br>You pick on facts.</h2>
+    <svg id="box" class="abs" viewBox="0 0 500 520">
+      <defs><linearGradient id="bf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1A2233"/><stop offset="1" stop-color="#0D121C"/></linearGradient></defs>
+      <ellipse cx="250" cy="470" rx="230" ry="34" fill="rgba(0,0,0,.45)"/>
+      <!-- body -->
+      <path d="M40 200 L250 290 L250 500 L40 410 Z" fill="url(#bf)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+      <path d="M460 200 L250 290 L250 500 L460 410 Z" fill="#121929" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+      <path d="M40 200 L250 110 L460 200 L250 290 Z" fill="#05070B"/>
+      <!-- lid -->
+      <g id="lid"><path d="M40 200 L250 110 L460 200 L250 290 Z" fill="#1E283C" stroke="#C8FF3D" stroke-width="3"/>
+        <path d="M145 155 L355 245" stroke="rgba(200,255,61,.5)" stroke-width="3"/></g>
+      <!-- lock -->
+      <g id="lock" transform="translate(250 380)">
+        <path id="shackle" d="M-26 -8 V-30 a26 26 0 0 1 52 0 V-8" fill="none" stroke="#C8FF3D" stroke-width="9" stroke-linecap="round"/>
+        <rect x="-40" y="-10" width="80" height="64" rx="14" fill="#C8FF3D"/>
+        <circle cx="0" cy="18" r="8" fill="#0A0D05"/>
+      </g>
+    </svg>
+    <div id="bids"></div>
+    <div id="pill5" class="abs"><div>✓ Sealed bids · ranked on landed cost</div></div>
+  </section>
+
+  <!-- S6 AUDITABLE DDP -->
+  <section id="s6" class="scene sc">
+    <div class="chip mono">03 — Auditable DDP</div>
+    <h2 id="h6" class="abs">Landed cost,<br>known upfront.</h2>
+    <svg id="map" class="abs" viewBox="0 0 920 560"></svg>
+    <div id="checks"></div>
+  </section>
+
+  <!-- S7 CTA -->
+  <section id="s7" class="scene">
+    <div id="not" class="abs">Not a marketplace.</div>
+    <div id="strike" class="abs"></div>
+    <h2 id="h7" class="abs">The <span class="l">infrastructure</span><br>layer of global<br>sourcing.</h2>
+    <div class="abs pr" id="pr1"></div><div class="abs pr" id="pr2"></div>
+    <div id="cta" class="abs"><div id="shine" class="abs"></div>Start sourcing <span>→</span></div>
+    <div id="url" class="abs">gosourcein.com</div>
+    <div id="bio" class="abs">Link in bio ↓</div>
+  </section>
+
+  <div id="grain" class="abs" style="z-index:9;pointer-events:none"></div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="node_modules/gsap/dist/SplitText.min.js"></script>
+<script>
+gsap.registerPlugin(SplitText);
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const IN = 'expo.out', OUT = 'power2.in';
+
+function build(){
+  const tl = gsap.timeline({paused:true});
+  const reveal = (el, t, opt={}) => {
+    const sp = SplitText.create(el,{type:opt.lines?'lines':'lines,words',mask:'lines'});
+    tl.from(opt.lines?sp.lines:sp.words,{yPercent:115,duration:opt.d||.8,ease:IN,stagger:opt.st||.06},t);
+    return sp;
+  };
+  const show = (id,t) => tl.set(id,{visibility:'visible'},t);
+  const exit = (id,t) => { tl.to(id+' > *',{y:-70,autoAlpha:0,duration:.38,ease:OUT,stagger:.02},t); tl.set(id,{visibility:'hidden'},t+.45); };
+
+  // ambient: glows + shapes drift for whole runtime (25s)
+  tl.to('#g1',{x:260,y:520,duration:25,ease:'sine.inOut'},0);
+  tl.to('#g2',{x:-380,y:-560,duration:25,ease:'sine.inOut'},0);
+  $$('.shape').forEach((s,i)=>{
+    tl.to(s,{y:(i%2?1:-1)*(60+i*12),rotation:(i%2?1:-1)*(90+i*30),duration:5,ease:'sine.inOut',repeat:4,yoyo:true,svgOrigin:'0 0'},0);
+  });
+  tl.from('#brand',{autoAlpha:0,y:-20,duration:.5,ease:IN},0);
+
+  // ── S1 HOOK 0–3.1
+  show('#s1',0);
+  tl.from('#qcard',{y:160,autoAlpha:0,scale:.92,duration:.7,ease:IN},.25);
+  tl.from('#s1 .kicker',{autoAlpha:0,x:-30,duration:.5,ease:IN},.05);
+  reveal('#hook',0,{st:.06,d:.7});
+  tl.fromTo('#u1',{scaleX:0},{scaleX:1,duration:.45,ease:'power3.out'},1.25);
+  tl.to('.lie',{x:6,duration:.05,repeat:7,yoyo:true,ease:'none'},1.3);
+  tl.from('#stamp',{scale:2.4,autoAlpha:0,rotation:-30,duration:.35,ease:'back.out(2)'},1.55);
+  tl.to('#qcard .v',{color:'#FF5B4F',duration:.25},1.6);
+  exit('#s1',2.75);
+
+  // ── S2 HIDDEN COSTS 3.1–7.0
+  show('#s2',3.1);
+  tl.from('#s2 .chip',{autoAlpha:0,x:-30,duration:.5,ease:IN},3.1);
+  reveal('#h2a',3.15,{st:.04});
+  tl.from(['#plabel','#price'],{autoAlpha:0,y:40,duration:.6,ease:IN,stagger:.06},3.4);
+  const steps=[4.20,4.88,5.61,6.27,6.53,6.85], pv={v:4.20}, pEl=$('#pv');
+  $$('#s2 .cost').forEach((c,i)=>{
+    const t=3.85+i*.42;
+    tl.from(c,{x:1100,duration:.55,ease:IN},t);
+    tl.to(pv,{v:steps[i+1],duration:.35,ease:'power2.out',onUpdate:()=>pEl.textContent=pv.v.toFixed(2)},t+.12);
+    tl.fromTo('#price',{scale:1.06},{scale:1,duration:.3,ease:'power2.out',transformOrigin:'left center'},t+.12);
+  });
+  tl.to('#price',{color:'#FF5B4F',duration:1.6,ease:'none'},3.95);
+  tl.from('#badge',{scale:0,rotation:-140,duration:.6,ease:'back.out(1.8)'},6.0);
+  tl.from('#foot2',{autoAlpha:0,duration:.4},6.1);
+  // circle wipe into brand
+  show('#s3',6.75);
+  tl.fromTo('#s3',{clipPath:'circle(0% at 50% 60%)'},{clipPath:'circle(150% at 50% 60%)',duration:.7,ease:'power3.inOut'},6.75);
+  tl.set('#s2',{visibility:'hidden'},7.5);
+
+  // ── S3 BRAND 6.75–10.3
+  const w = SplitText.create('#word',{type:'chars',mask:'chars'});
+  tl.from(w.chars,{yPercent:110,duration:.7,ease:IN,stagger:.035},7.1);
+  reveal('#tag3',7.6,{st:.06});
+  tl.from('#s3 .mono',{autoAlpha:0,y:20,duration:.5,ease:IN},8.2);
+  tl.from(['#r3a','#r3b'],{scale:.6,autoAlpha:0,svgOrigin:'540 820',duration:1.2,ease:IN,stagger:.1},6.95);
+  tl.to('#r3a',{rotation:60,svgOrigin:'540 820',duration:3.4,ease:'none'},6.95);
+  tl.fromTo('#o3',{rotation:0},{rotation:300,svgOrigin:'540 820',duration:3.4,ease:'power1.inOut'},6.95);
+  tl.to('#s3',{clipPath:'circle(0% at 9% 8.3%)',duration:.65,ease:'power3.in'},9.75);
+  tl.set('#s3',{visibility:'hidden'},10.45);
+
+  // ── S4 AI RANKING 10.3–14.1
+  const data=[['Supplier A','Shenzhen · CN',71,[.6,.8,.5,.7]],['Supplier B','Izmir · TR',94,[.9,.85,.95,.9]],['Supplier C','Ho Chi Minh · VN',63,[.8,.4,.5,.6]],['Supplier D','Pune · IN',88,[.75,.9,.85,.8]],['Supplier E','Monterrey · MX',79,[.5,.95,.8,.7]]];
+  const rows=$('#rows');
+  data.forEach((d,i)=>{
+    const r=document.createElement('div'); r.className='abs panel row'; r.style.top=(720+i*146)+'px';
+    r.innerHTML=`<div class="rk">#${i+1}</div><div class="nm"><b>${d[0]}</b><span>${d[1]}</span></div><div class="bars">${d[3].map(h=>`<i style="height:${Math.round(h*56)}px"></i>`).join('')}</div><div class="s">0</div>`;
+    rows.appendChild(r);
+  });
+  show('#s4',10.3);
+  tl.from('#s4 .chip',{autoAlpha:0,x:-30,duration:.5,ease:IN},10.3);
+  tl.from('#h4',{y:90,autoAlpha:0,duration:.7,ease:IN},10.35);
+  const cnt={v:0}; tl.to(cnt,{v:200,duration:1.2,ease:'power3.out',onUpdate:()=>document.getElementById('cnt').textContent=Math.round(cnt.v)+'K'},10.4);
+  tl.from('#fac',{autoAlpha:0,y:20,duration:.5,ease:IN},10.7);
+  const R=$$('#rows .row');
+  tl.from(R,{x:-1100,duration:.6,ease:IN,stagger:.07},10.8);
+  R.forEach((r,i)=>{
+    tl.from(r.querySelectorAll('.bars i'),{scaleY:0,duration:.4,ease:IN,stagger:.04},11.1+i*.05);
+    const o={v:0},s=r.querySelector('.s');
+    tl.to(o,{v:data[i][2],duration:.8,ease:'power2.out',onUpdate:()=>s.textContent=Math.round(o.v)},11.2+i*.05);
+  });
+  // sort by score
+  const order=data.map((d,i)=>i).sort((a,b)=>data[b][2]-data[a][2]);
+  order.forEach((idx,rank)=>{
+    tl.to(R[idx],{y:(rank-idx)*146,duration:.7,ease:'power3.inOut'},12.3);
+    tl.set(R[idx].querySelector('.rk'),{textContent:'#'+(rank+1)},12.65);
+  });
+  const win=R[order[0]];
+  tl.to(win,{borderColor:'#C8FF3D',backgroundColor:'rgba(200,255,61,.08)',duration:.3},13.0);
+  tl.to(win.querySelectorAll('.bars i'),{backgroundColor:'#C8FF3D',duration:.3},13.0);
+  tl.to(win.querySelector('.s'),{color:'#C8FF3D',duration:.3},13.0);
+  tl.to(R.filter(r=>r!==win),{opacity:.45,duration:.3},13.0);
+  tl.set('#best',{top:720-22},0);
+  tl.from('#best',{scale:0,autoAlpha:0,duration:.4,ease:'back.out(2.5)'},13.05);
+  exit('#s4',13.75);
+
+  // ── S5 CLOSED-BOX RFQ 14.1–17.6
+  const bids=$('#bids'), starts=[[-260,760],[1100,820],[-260,1180],[1100,1240],[300,1950],[640,1950]];
+  starts.forEach((p,i)=>{
+    const b=document.createElement('div'); b.className='abs panel bid'; b.style.left='445px'; b.style.top='900px';
+    b.innerHTML=`<small>Bid 0${i+1}</small><b>$${['5.12','4.87','5.40','4.96','5.71','5.03'][i]}</b>`;
+    bids.appendChild(b);
+    gsap.set(b,{x:p[0]-445,y:p[1]-900,rotation:(i%2?1:-1)*14});
+  });
+  show('#s5',14.1);
+  tl.from('#s5 .chip',{autoAlpha:0,x:-30,duration:.5,ease:IN},14.1);
+  reveal('#h5',14.15,{st:.05});
+  tl.from('#box',{y:120,autoAlpha:0,duration:.7,ease:IN},14.3);
+  tl.set('#lid',{y:-120,rotation:-14,svgOrigin:'40 200'},0);
+  tl.set('#lock',{scale:0,svgOrigin:'250 380'},0);
+  $$('#bids .bid').forEach((b,i)=>{
+    const t=14.7+i*.16;
+    tl.to(b,{x:0,y:0,rotation:0,duration:.55,ease:'power3.out'},t);
+    tl.to(b,{y:60,scale:.3,autoAlpha:0,duration:.3,ease:'power2.in'},t+.55);
+  });
+  tl.to('#lid',{y:0,rotation:0,duration:.45,ease:'back.out(1.6)'},16.1);
+  tl.to('#lock',{scale:1,duration:.4,ease:'back.out(2.2)'},16.35);
+  tl.fromTo('#shackle',{y:-14},{y:0,duration:.2,ease:'power2.in'},16.7);
+  tl.fromTo('#box',{x:-8},{x:0,duration:.25,ease:'elastic.out(1,.3)'},16.9);
+  tl.from('#pill5 div',{y:40,autoAlpha:0,duration:.5,ease:IN},16.75);
+  exit('#s5',17.3);
+
+  // ── S6 DDP 17.6–21.0
+  const map=$('#map'), ns='http://www.w3.org/2000/svg', O=[110,330];
+  const D=[[360,90],[520,160],[700,70],[820,220],[640,300],[860,400],[520,470],[330,500],[760,520],[420,300]];
+  const mk=(t,a)=>{const e=document.createElementNS(ns,t);for(const k in a)e.setAttribute(k,a[k]);map.appendChild(e);return e;};
+  mk('rect',{x:0,y:0,width:920,height:560,rx:28,fill:'#0D121C',stroke:'rgba(255,255,255,.10)','stroke-width':1.5});
+  for(let x=46;x<920;x+=46)for(let y=46;y<560;y+=46)mk('circle',{cx:x,cy:y,r:1.6,fill:'rgba(255,255,255,.10)'});
+  const paths=D.map(d=>{const mx=(O[0]+d[0])/2, my=Math.min(O[1],d[1])-120;return mk('path',{d:`M${O[0]} ${O[1]} Q${mx} ${my} ${d[0]} ${d[1]}`,fill:'none',stroke:'#C8FF3D','stroke-width':3,'stroke-linecap':'round',opacity:.85});});
+  const dots=D.map(d=>mk('circle',{cx:d[0],cy:d[1],r:11,fill:'#5B7CFF',stroke:'#06080D','stroke-width':4}));
+  const og=mk('circle',{cx:O[0],cy:O[1],r:18,fill:'#C8FF3D'}); const ogr=mk('circle',{cx:O[0],cy:O[1],r:18,fill:'none',stroke:'#C8FF3D','stroke-width':3});
+  const lbl=mk('text',{x:O[0]-14,y:O[1]+60,fill:'#8B93A7','font-family':'DejaVu Sans Mono','font-size':20}); lbl.textContent='ORIGIN';
+  const lbl2=mk('text',{x:620,y:44,fill:'#C8FF3D','font-family':'DejaVu Sans Mono','font-size':22}); lbl2.textContent='10 DESTINATIONS';
+  paths.forEach(p=>{const L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L;});
+  const items=[['Customs','calc'],['VAT','calc'],['Shipping','calc'],['Insurance','calc']];
+  const ch=$('#checks');
+  items.forEach((it,i)=>{const c=document.createElement('div');c.className='abs panel ck';c.style.left=(80+(i%2)*470)+'px';c.style.top=(1240+Math.floor(i/2)*108)+'px';
+    c.innerHTML=`<i><svg width="24" height="24" viewBox="0 0 24 24"><path class="tk" d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#0A0D05" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24" stroke-dashoffset="24"/></svg></i>${it[0]}<span>Auditable</span>`;ch.appendChild(c);});
+  show('#s6',17.6);
+  tl.from('#s6 .chip',{autoAlpha:0,x:-30,duration:.5,ease:IN},17.6);
+  reveal('#h6',17.65,{st:.05});
+  tl.from('#map',{y:80,autoAlpha:0,duration:.6,ease:IN},17.85);
+  tl.from([og],{scale:0,transformOrigin:'center',duration:.4,ease:'back.out(3)'},18.1);
+  tl.fromTo(ogr,{attr:{r:18},opacity:1},{attr:{r:60},opacity:0,duration:1,ease:'power2.out',repeat:2},18.2);
+  paths.forEach((p,i)=>{
+    tl.to(p,{strokeDashoffset:0,duration:.7,ease:'power2.inOut'},18.25+i*.08);
+    tl.from(dots[i],{scale:0,transformOrigin:'center',duration:.35,ease:'back.out(3)'},18.85+i*.08);
+  });
+  tl.from(lbl2,{opacity:0,duration:.4},19.2);
+  $$('#checks .ck').forEach((c,i)=>{
+    tl.from(c,{y:60,autoAlpha:0,duration:.5,ease:IN},19.1+i*.12);
+    tl.to(c.querySelector('.tk'),{strokeDashoffset:0,duration:.3,ease:'power2.out'},19.45+i*.12);
+  });
+  exit('#s6',20.7);
+
+  // ── S7 CTA 21.0–25.0
+  show('#s7',21.0);
+  tl.from('#not',{autoAlpha:0,y:30,duration:.5,ease:IN},21.0);
+  tl.fromTo('#strike',{scaleX:0},{scaleX:1,duration:.4,ease:'power3.out'},21.35);
+  reveal('#h7',21.45,{st:.06});
+  tl.from('#cta',{scale:.6,autoAlpha:0,duration:.7,ease:'back.out(1.7)'},22.2);
+  ['#pr1','#pr2'].forEach((p,i)=>tl.fromTo(p,{scale:1,opacity:.7},{scale:1.35,opacity:0,duration:1.3,ease:'power2.out',repeat:1},22.6+i*.6));
+  tl.fromTo('#shine',{x:0},{x:1200,duration:.9,ease:'power2.inOut',repeat:1,repeatDelay:.6},22.7);
+  tl.to('#cta span',{x:14,duration:.35,ease:'sine.inOut',repeat:5,yoyo:true},22.9);
+  const u=SplitText.create('#url',{type:'chars'});
+  tl.from(u.chars,{autoAlpha:0,duration:.01,stagger:.045},22.6);
+  tl.from('#bio',{autoAlpha:0,y:20,duration:.5,ease:IN},23.3);
+  tl.to('#bio',{y:12,duration:.4,ease:'sine.inOut',repeat:3,yoyo:true},23.8);
+  tl.to({},{duration:.01},25.0);
+  return tl;
+}
+
+window.ready = document.fonts.ready.then(()=>{
+  // position the "lying" underline after layout
+  const st=$('#stage').getBoundingClientRect(), lr=$('.lie').getBoundingClientRect();
+  gsap.set('#u1',{left:lr.left-st.left,top:lr.bottom-st.top-6,width:lr.width});
+  const tl = build();
+  window.__tl = tl; window.__dur = tl.duration();
+  tl.seek(0,false);
+  return tl.duration();
+});
+</script>
+</body>
+</html>
